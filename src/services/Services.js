@@ -9,8 +9,8 @@ class Services {
     this.model = nomeDoModel;
   }
 
-  async pegaTodosOsRegistros () {
-    return dataSource[this.model].findAll();
+  async pegaTodosOsRegistros (where = {}) {
+    return dataSource[this.model].findAll({ where : { ...where}});
   }
 
   async pegaRegistrosPorEscopo (escopo) {
@@ -26,6 +26,10 @@ class Services {
   } //o where é um objeto, e o operador spread é para pegar as chaves e os valores do objeto e colocar dentro do where do Sequelize
   //o where serve para fazer consultas mais específicas, como por exemplo, pegar um registro por email, ou por nome, etc. Ele é um objeto que pode conter várias chaves e valores, e o Sequelize vai usar essas chaves e valores para fazer a consulta no banco de dados.
   //ESTUDAR MAIS O WHERE!!
+
+  async pegaEContaRegistros(where) {
+    return dataSource[this.model].findAndCountAll({ where : { ...where}});
+  }
 
   //na criação de novo registro de matricula, a validação de chave estrangeira está sendo feita pelo Sequelize e não pela aplicação
   async criaRegistro(dadosDoRegistro) {
