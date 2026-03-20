@@ -1,4 +1,4 @@
-const dataSource = require('../models');
+const dataSource = require('../database/models');
 
 class Services {
   constructor(nomeDoModel) {
@@ -7,6 +7,10 @@ class Services {
 
   async pegaTodosOsRegistros () {
     return dataSource[this.model].findAll();
+  }
+
+  async pegaRegistrosPorEscopo (escopo) {
+    return dataSource[this.model].scope(escopo).findAll();
   }
 
   async pegaUmRegistroPorId(id) {
@@ -27,6 +31,7 @@ class Services {
     return true;
   }
 
+  //agora, com o PARANOID, ele não apaga mas faz um queru com UPDATE para colocar a coluna deletedAt com a data atual, ou seja, ele marca como deletado mas não apaga de fato do banco de dados
   async excluiRegistro(id) {
     return dataSource[this.model].destroy({ where: { id: id } });
   }
