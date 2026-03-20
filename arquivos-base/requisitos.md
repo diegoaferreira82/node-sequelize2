@@ -23,6 +23,18 @@
 
 
 - Foram percebidas algumas falhas de validação dos formulários por parte do front-end, o que resultou em dados de email inválidos no banco. É desejável que essa validação não seja responsabilidade exclusiva do front.
+<!-- Foi alterado no MODELS Pessoas a propriedade email para validação. O MODELS é quem possui 
+todas as funções do Sequelize e a funçao de validação foi incluida:
+    email: {
+      type: DataTypes.STRING,
+      validate: {
+        isEmail: {
+          args: true, 
+          msg: 'O email deve ser um endereço de email válido.'
+        }
+      }
+    }, -->
+
 
 - É importante poder consultar todas as matrículas confirmadas referentes a estudante X de forma rápida.
 

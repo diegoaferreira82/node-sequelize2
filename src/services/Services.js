@@ -1,3 +1,7 @@
+//O services contem as funções chamadas, e dentro dessas funções
+//tem as funções próprias do Sequelize.
+
+
 const dataSource = require('../database/models');
 
 class Services {
@@ -16,14 +20,21 @@ class Services {
   async pegaUmRegistroPorId(id) {
     return dataSource[this.model].findByPk(id);
   }
+  
+  async pegaUmRegistro(where) {
+    return dataSource[this.model].findOne({ where : { ...where}});
+  } //o where é um objeto, e o operador spread é para pegar as chaves e os valores do objeto e colocar dentro do where do Sequelize
+  //o where serve para fazer consultas mais específicas, como por exemplo, pegar um registro por email, ou por nome, etc. Ele é um objeto que pode conter várias chaves e valores, e o Sequelize vai usar essas chaves e valores para fazer a consulta no banco de dados.
+  //ESTUDAR MAIS O WHERE!!
 
+  //na criação de novo registro de matricula, a validação de chave estrangeira está sendo feita pelo Sequelize e não pela aplicação
   async criaRegistro(dadosDoRegistro) {
     return dataSource[this.model].create(dadosDoRegistro);
   }
 
-  async atualizaRegistro(dadosAtualizados, id) {
+  async atualizaRegistro(dadosAtualizados, where) {
     const listadeRegistrosAtualizados = await dataSource[this.model].update(dadosAtualizados, {
-      where: { id: id }
+      where: { ...where }
     });
     if (listadeRegistrosAtualizados[0] === 0) {
       return false;

@@ -1,4 +1,5 @@
 'use strict';
+const isCpfValido = require('../../utils/validaCpfHelper.js');
 const {
   Model
 } = require('sequelize');
@@ -10,15 +11,51 @@ module.exports = (sequelize, DataTypes) => {
       });
       Pessoa.hasMany(models.Matricula, {
         foreignKey: 'estudante_id',
-        // scope: { status: 'matriculado' },
+        scope: { status: 'matriculado' },
         as: 'aulasMatriculadas'
+      });
+      Pessoa.hasMany(models.Matricula, {
+        foreignKey: 'estudante_id',
+        as: 'todasAsMatriculas'
       });
     }
   }
+
+  //aqui podem ser colocadas validações próprias do Sequelize, como por exemplo, 
+  // a validação de email, que garante que o valor inserido seja um endereço de email válido. 
+  // Para isso, basta adicionar a propriedade 'validate' ao campo 'email' e definir a validação desejada.
+  //  No exemplo abaixo, a validação 'isEmail' é utilizada para garantir que o valor inserido 
+  //  um endereço de email válido, e uma mensagem personalizada é exibida caso a validação falhe.
   Pessoa.init({
-    nome: DataTypes.STRING,
-    email: DataTypes.STRING,
-    cpf: DataTypes.STRING,
+    nome: {
+      type:DataTypes.STRING,
+      validate: {
+        len: {
+          args: [3, 30],
+          msg: 'O nome deve conter entre 3 e 30 caracteres.'
+          // a validação é fita no Sequelize e repassada ao ORM
+          //diferentemente as Constraints(restrições) são feitas também no modelo ,porém deve estar no Banco do Ddados, 
+          //e para implementá-la deve ser feita uma nova miração, com opção de AddConstraints
+        }
+      }
+    },
+    email: {
+      type: DataTypes.STRING,
+      validate: {
+        isEmail: {
+          args: true, 
+          msg: 'O email deve ser um endereço de email válido.'
+        }
+      }
+    },
+    cpf: {
+      type: DataTypes.STRING,
+      validate: {
+         cpfEhValido: (cpf) => {
+          if (!isCpfValido(cpf)) throw new Error('CPF inválido');  // Expressão regular para validar o formato do CPF (XXX.XXX.XXX-XX)
+        }
+      }
+    },
     ativo: DataTypes.BOOLEAN,
     role: DataTypes.STRING
   }, {
