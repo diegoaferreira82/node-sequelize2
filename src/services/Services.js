@@ -27,8 +27,8 @@ class Services {
   //o where serve para fazer consultas mais específicas, como por exemplo, pegar um registro por email, ou por nome, etc. Ele é um objeto que pode conter várias chaves e valores, e o Sequelize vai usar essas chaves e valores para fazer a consulta no banco de dados.
   //ESTUDAR MAIS O WHERE!!
 
-  async pegaEContaRegistros(where) {
-    return dataSource[this.model].findAndCountAll({ where : { ...where}});
+  async pegaEContaRegistros(options) {
+    return dataSource[this.model].findAndCountAll({ ...options }); //os tres pontos é um spread que recebe o objeto passado como parâmetro no controller
   }
 
   //na criação de novo registro de matricula, a validação de chave estrangeira está sendo feita pelo Sequelize e não pela aplicação
@@ -36,9 +36,11 @@ class Services {
     return dataSource[this.model].create(dadosDoRegistro);
   }
 
-  async atualizaRegistro(dadosAtualizados, where) {
-    const listadeRegistrosAtualizados = await dataSource[this.model].update(dadosAtualizados, {
-      where: { ...where }
+  async atualizaRegistro(dadosAtualizados, where, transacao = {}) {
+    const listadeRegistrosAtualizados = await dataSource[this.model]
+    .update(dadosAtualizados, {
+      where: { ...where },
+      transaction: transacao
     });
     if (listadeRegistrosAtualizados[0] === 0) {
       return false;

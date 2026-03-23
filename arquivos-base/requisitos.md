@@ -43,8 +43,9 @@ OK - O cliente gostaria de poder consultar as turmas abertas por intervalo de da
 <!-- Implementado no controler de cursos filtro de data inicial e parametrp "?" direto na URL -->
 
 
-- O cliente quer poder consultar as matrículas por curso e saber quais delas estão lotadas, para organizar melhor as matrículas.
+OK O cliente quer poder consultar as matrículas por curso e saber quais delas estão lotadas, para organizar melhor as matrículas.
 <!-- A intenção e ver quantos cursos uma pessoa já está matriculado para evitar de iniciar novo curso sem terminar os anteriores -->
 
-- O cliente gostaria que, uma vez que o cadastro de um estudante fosse desativado, todas as matrículas relativas a este estudante automaticamente passassem a constar como “canceladas”.
+OK O cliente gostaria que, uma vez que o cadastro de um estudante fosse desativado, todas as matrículas relativas a este estudante automaticamente passassem a constar como “canceladas”.
+<!-- para implementar esse requisito foi usado o transaction do sequelize que monta um ponto de restauração em caso de erro durante a execução da transação e atuallização das tabelas -->
 
